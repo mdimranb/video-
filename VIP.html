@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP TRADERS</title>
+<style>
+/* (বর্ণনা অংশ অপরিবর্তিত — মূল স্টাইল আগের মতোই রাখা হয়েছে) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Share Tech Mono',monospace;font-variant-numeric:tabular-nums}
+body{background:#030305;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow-x:hidden;position:relative}
+#lockImage,#homeVideo,#homeImage{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
+#homeVideo,#homeImage{display:none}
+#videoOverlay{position:fixed;inset:0;background:rgba(0,0,0,.15);z-index:1;pointer-events:none}
+.container{width:100%;max-width:420px;padding:15px;position:relative;z-index:10}
+@keyframes rainbowBorder{0%{border-color:#ff0055;box-shadow:0 0 15px rgba(255,0,85,.6)}20%{border-color:#ffcc00;box-shadow:0 0 15px rgba(255,204,0,.6)}40%{border-color:#00ff65;box-shadow:0 0 15px rgba(0,255,101,.6)}60%{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,.6)}80%{border-color:#9d00ff;box-shadow:0 0 15px rgba(157,0,255,.6)}100%{border-color:#ff0055;box-shadow:0 0 15px rgba(255,0,85,.6)}}
+@keyframes rainbowText{0%{color:#ff0055;text-shadow:0 0 10px #ff0055}25%{color:#00ff65;text-shadow:0 0 10px #00ff65}50%{color:#00e5ff;text-shadow:0 0 10px #00e5ff}75%{color:#ffcc00;text-shadow:0 0 10px #ffcc00}100%{color:#ff0055;text-shadow:0 0 10px #ff0055}}
+@keyframes glow{0%,100%{opacity:1}50%{opacity:.7}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.login-card{background:rgba(10,15,25,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:2px solid #00ff65;animation:rainbowBorder 6s infinite linear;border-radius:16px;padding:25px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.login-title{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;animation:rainbowText 5s infinite linear;margin-bottom:5px}
+.input-group{margin:20px 0;text-align:left}
+.input-group label{font-size:11px;color:#00ff65;display:block;margin-bottom:5px}
+.input-group input{width:100%;padding:12px;background:rgba(0,0,0,.8);border:1px solid #00ff65;border-radius:8px;color:#00ff65;font-size:14px;outline:none;transition:all .3s}
+.input-group input:focus{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,.3)}
+.login-btn{width:100%;padding:12px;background:linear-gradient(90deg,#00ff65,#00b347);color:#000;border:none;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer;box-shadow:0 0 15px rgba(0,255,101,.6);margin-bottom:12px;font-family:'Orbitron',sans-serif;transition:all .3s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(0,255,101,.8)}
+.top-header{display:flex;justify-content:space-between;align-items:center;background:rgba(10,20,30,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1.5px solid #00ff65;animation:rainbowBorder 8s infinite linear;border-radius:10px;padding:10px 14px;margin-bottom:10px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.header-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;animation:rainbowText 6s infinite linear}
+.telegram-header-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:#0088cc;border-radius:50%;color:#fff;text-decoration:none;box-shadow:0 0 10px #0088cc;font-size:14px;transition:all .3s}
+.telegram-header-btn:hover{transform:scale(1.1);box-shadow:0 0 20px #0088cc}
+.timer-box{background:rgba(20,5,15,.45);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid #ff0055;box-shadow:0 0 12px rgba(255,0,85,.4);padding:8px;text-align:center;font-size:13px;color:#fff;border-radius:8px;margin-bottom:12px;font-weight:bold;animation:glow 1.5s infinite}
+.timer-box.warning{border-color:#ffcc00;box-shadow:0 0 12px rgba(255,204,0,.6)}
+/* ── SINGLE PREDICTION BOX ── */
+.top-display{display:flex;justify-content:center;margin-bottom:12px}
+.box{
+  width:100%;
+  background:rgba(0,10,20,.45);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:16px;
+  padding:20px 12px;
+  text-align:center;
+  transition:all .3s;
+}
+.box:hover{transform:translateY(-4px)}
+.box-title{font-size:11px;color:#a0a0a0;margin-bottom:8px;letter-spacing:1px}
+.box-green{border:2px solid #00ff65;box-shadow:0 0 20px rgba(0,255,101,.4)}
+.box-red{border:2px solid #ff0055;box-shadow:0 0 20px rgba(255,0,85,.4)}
+.box-blue{border:2px solid #00e5ff;box-shadow:0 0 20px rgba(0,229,255,.4)}
+.val-display{font-family:'Orbitron',sans-serif;font-size:42px;font-weight:800;line-height:1}
+.pred-type-label{font-size:10px;color:#888;margin-top:6px;letter-spacing:2px}
+.active-info-bar{background:rgba(0,229,255,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid #00e5ff;box-shadow:0 0 10px rgba(0,229,255,.2);border-radius:8px;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#00e5ff;font-weight:bold;margin-bottom:8px}
+.accuracy-bar{text-align:center;color:#ffcc00;font-size:12px;font-weight:bold;margin-bottom:15px;background:rgba(255,204,0,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:8px 12px;border-radius:20px;border:1px solid rgba(255,204,0,.4);box-shadow:0 0 12px rgba(255,204,0,.2);letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px}
+.accuracy-val-glow{font-family:'Orbitron',sans-serif;font-size:15px;color:#00ff65;text-shadow:0 0 10px #00ff65;font-weight:900}
+.stats-container{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.stat-box{background:rgba(0,20,40,.4);border:1px solid #00e5ff;border-radius:8px;padding:8px;text-align:center;font-size:10px}
+.stat-label{color:#888;font-size:9px}
+.stat-value{color:#00ff65;font-family:'Orbitron',sans-serif;font-size:16px;font-weight:bold;margin-top:4px}
+.history-card{background:rgba(5,10,20,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(0,255,101,.25);border-radius:12px;padding:10px;max-height:380px;overflow-y:auto}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px;transition:all .2s}
+.row:hover{background:rgba(0,255,101,.05)}
+.period-id{color:#00ff65;font-weight:bold;min-width:45px}
+.pred-text{color:#00ff65;font-weight:bold;flex:1;text-align:center}
+.result-text{color:#00e5ff;font-weight:bold;flex:1;text-align:center}
+.neon-win-tag{background:rgba(0,255,101,.15);border:1px solid #00ff65;color:#00ff65;font-weight:bold;padding:3px 8px;border-radius:12px;font-size:10px;text-shadow:0 0 8px #00ff65;box-shadow:0 0 10px rgba(0,255,101,.4)}
+.badge-pending{background:#ffcc00;color:#000;font-weight:bold;padding:3px 8px;border-radius:12px;font-size:10px;animation:glow 1s infinite}
+.badge-win{background:#00ff65;color:#000;font-weight:bold;padding:3px 8px;border-radius:12px;font-size:10px;box-shadow:0 0 10px #00ff65}
+.badge-loss{background:#ff0055;color:#fff;font-weight:bold;padding:3px 8px;border-radius:12px;font-size:10px;box-shadow:0 0 10px #ff0055}
+.footer-note{text-align:center;font-size:9px;color:#888;margin-top:12px}
+.status-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;animation:glow .6s infinite}
+.status-online{background:#00ff65}
+.status-offline{background:#ff0055}
+.hidden{display:none!important}
+.notice-popup{
+  position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(5px);display:none;z-index:1000;align-items:center;justify-content:center;padding:20px;animation:slideDown .3s ease
+}
+.notice-popup.show{display:flex}
+.notice-content{background:rgba(30,20,50,.95);border:2px solid #ff0055;border-radius:16px;padding:25px;max-width:400px;text-align:center;box-shadow:0 0 40px rgba(255,0,85,.3)}
+.notice-priority-icon{font-size:40px;margin-bottom:15px}
+.notice-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;color:#00ff65;margin-bottom:10px}
+.notice-message{font-size:12px;color:#e0e0e0;line-height:1.6;margin-bottom:20px}
+.notice-close-btn{padding:10px 20px;background:linear-gradient(90deg,#00ff65,#00b347);border:none;border-radius:8px;color:#000;font-weight:bold;cursor:pointer;font-family:'Orbitron',sans-serif}
+.expiry-note{font-size:11px;color:#ffcc00;margin-bottom:10px;text-align:center;background:rgba(255,204,0,.1);padding:8px;border-radius:8px;border:1px solid rgba(255,204,0,.3)}
+.error-note{font-size:11px;color:#ff0055;margin-bottom:10px;text-align:center;background:rgba(255,0,85,.1);padding:8px;border-radius:8px;border:1px solid rgba(255,0,85,.3)}
+.prediction-stats{font-size:10px;color:#00e5ff;text-align:center;margin:8px 0;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<img id="lockImage" src="" alt="" style="display:block">
+<video id="homeVideo" playsinline preload="auto" style="display:none;"><source src="" type="video/mp4"></video>
+<img id="homeImage" src="" alt="" style="display:none">
+<div id="videoOverlay"></div>
+
+<!-- NOTICE POPUP -->
+<div id="noticePopup" class="notice-popup">
+  <div class="notice-content">
+    <div class="notice-priority-icon" id="noticePriorityIcon">ℹ️</div>
+    <div class="notice-title" id="noticeTitle">NOTICE</div>
+    <div class="notice-message" id="noticeMessage">Message here</div>
+    <button class="notice-close-btn" onclick="closeNotice()">CLOSE</button>
+  </div>
+</div>
+
+<div class="container">
+<!-- LOGIN -->
+<div id="loginSection" class="login-card">
+  <div class="login-title" id="loginTitle">VIP TRADER SYSTEM</div>
+  <div style="font-size:11px;color:#aaa;margin-bottom:15px">ENTER YOUR VIP ACCESS KEY</div>
+  <div class="input-group">
+    <label>VIP ACCESS PASSWORD</label>
+    <input type="password" id="passKey" placeholder="Enter VIP Key" onkeydown="if(event.key==='Enter')authenticate()">
+  </div>
+  <button class="login-btn" onclick="authenticate()">LOGIN SYSTEM</button>
+  <a href="https://t.me/EMTraderHack" target="_blank" style="text-decoration:none" id="tgBtn">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;background:#0088cc;color:#fff;padding:10px;border-radius:8px;font-weight:bold;font-size:13px;cursor:pointer">✈ JOIN TELEGRAM</div>
+  </a>
+  <div id="loginError" class="error-note hidden" style="margin-top:12px"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashSection" class="hidden">
+  <div class="top-header">
+    <div class="header-title" id="appTitle">VIP TRADER SYSTEM</div>
+    <a href="" target="_blank" class="telegram-header-btn" id="tgHeader">✈</a>
+  </div>
+
+  <div class="timer-box" id="timerBox">NEXT SIGNAL IN: <span id="timerVal" style="color:#ff0055;font-size:15px">00:00</span></div>
+
+  <!-- CONNECTION STATUS -->
+  <div style="text-align:center;font-size:10px;margin-bottom:12px;color:#00e5ff">
+    <span class="status-indicator status-online" id="statusDot"></span>
+    <span id="statusText">CONNECTED TO SERVER</span>
+  </div>
+
+  <!-- SINGLE PREDICTION BOX -->
+  <div class="top-display">
+    <div class="box box-green" id="predBox">
+      <div class="box-title" id="predTypeLabel">NEXT PREDICTION</div>
+      <div class="val-display" id="predVal" style="color:#00ff65;text-shadow:0 0 15px #00ff65">ANALYZING</div>
+      <div class="pred-type-label" id="predCategoryLabel">MARKET ANALYSIS...</div>
+    </div>
+  </div>
+
+  <div class="active-info-bar">
+    <span>PERIOD: <span id="activePeriodText" style="color:#fff;font-family:Orbitron">00000</span></span>
+    <span>SIGNAL: <span id="activeSignalText" style="color:#00ff65">---</span></span>
+  </div>
+
+  <div class="accuracy-bar">
+    <span>⚡ CONFIDENCE RATE:</span>
+    <span class="accuracy-val-glow" id="accuracyVal">---%</span>
+  </div>
+
+  <!-- STATISTICS -->
+  <div class="stats-container">
+    <div class="stat-box">
+      <div class="stat-label">WIN RATE</div>
+      <div class="stat-value" id="winRateStat">0%</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">TOTAL SIGNALS</div>
+      <div class="stat-value" id="totalSignalsStat">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">WINS</div>
+      <div class="stat-value" style="color:#00ff65" id="winsStat">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">LOSSES</div>
+      <div class="stat-value" style="color:#ff0055" id="lossesStat">0</div>
+    </div>
+  </div>
+
+  <div id="expiryNote" class="expiry-note hidden"></div>
+  <div id="errorNote" class="error-note hidden"></div>
+
+  <div class="prediction-stats" id="predStats">ANALYZING MARKET PATTERNS...</div>
+  <div class="history-card" id="historyList"></div>
+  <div class="footer-note">🔴 LIVE REAL-TIME VIP SERVER CONNECTED · WINGO 1M</div>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+<script>
+/*
+  Updated prediction engine + secure client auth flow:
+  - Client now calls a callable Cloud Function `validateKey` to validate VIP keys and bind deviceId.
+  - deviceId is stored in localStorage and sent to the server for device-based usage limits.
+  - No client-side direct reads/writes to keys path (server-side function should manage keys).
+  - Prediction engine uses recent results from API with smoothing for better signals.
+*/
+
+/* ====== Firebase config (public web-config kept as provided earlier) ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDM6DGIClVshMTAMMLl1J2INu7rw2352so",
+  authDomain: "planning-with-ai-383ae.firebaseapp.com",
+  databaseURL: "https://planning-with-ai-383ae-default-rtdb.firebaseio.com",
+  projectId: "planning-with-ai-383ae",
+  storageBucket: "planning-with-ai-383ae.firebasestorage.app",
+  messagingSenderId: "181855457565",
+  appId: "1:181855457565:web:7d2d9b8003cabdecd511f4"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let currentPeriod5Digit = "", activeSignal = {}, predictionsMap = {};
+let totalSignals = 0, winCount = 0, lossCount = 0;
+let connectionOK = false;
+let userExpireDays = null;
+let resultCache = new Set();
+let currentUserKey = null;
+
+// Prediction history & recent results
+let predictionHistory = []; // recent predictions with outcomes
+const MAX_HISTORY = 100;     // keep more history for better statistics
+
+// recentResults: sliding window of last observed winning numbers (integers 0-9)
+let recentResults = loadRecentResults(); // initially from localStorage or empty
+const RECENT_WINDOW = 60; // how many past draws we keep for statistics
+
+const API_URL = "https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json";
+
+/* ===== Utility helpers ===== */
+function saveRecentResults() {
+  try {
+    localStorage.setItem('recentResults_v1', JSON.stringify(recentResults.slice(-RECENT_WINDOW)));
+  } catch (e) { /* ignore storage errors */ }
+}
+
+function loadRecentResults() {
+  try {
+    const raw = localStorage.getItem('recentResults_v1');
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) return arr;
+  } catch (e) {}
+  return [];
+}
+
+function pad2(n){ return n<10 ? '0'+n : ''+n; }
+
+/* ===== Device ID generation ===== */
+function generateDeviceId() {
+  try {
+    const existing = localStorage.getItem('vip_device_id_v1');
+    if (existing) return existing;
+    const id = 'dev-' + ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+    localStorage.setItem('vip_device_id_v1', id);
+    return id;
+  } catch (e) {
+    const id = 'dev-' + Date.now() + '-' + Math.random().toString(36).slice(2,9);
+    localStorage.setItem('vip_device_id_v1', id);
+    return id;
+  }
+}
+
+/* ===== Model: compute probabilities from recentResults ===== */
+function computeModelProbabilities() {
+  const counts = { BIG: 1, SMALL: 1, RED: 1, GREEN: 1 };
+  const decayBase = 0.97;
+  for (let i = 0; i < recentResults.length; i++) {
+    const idxFromEnd = recentResults.length - 1 - i;
+    const w = Math.pow(decayBase, i);
+    const num = recentResults[idxFromEnd];
+    if (typeof num !== 'number' || isNaN(num)) continue;
+    const bs = num >= 5 ? 'BIG' : 'SMALL';
+    const rg = num % 2 === 0 ? 'RED' : 'GREEN';
+    counts[bs] += w;
+    counts[rg] += w;
+  }
+  const bsTotal = counts.BIG + counts.SMALL;
+  const rgTotal = counts.RED + counts.GREEN;
+  return {
+    BS: { BIG: counts.BIG / bsTotal, SMALL: counts.SMALL / bsTotal },
+    RG: { RED: counts.RED / rgTotal, GREEN: counts.GREEN / rgTotal }
+  };
+}
+
+function modelAccuracyFor(type, value) {
+  if (!predictionHistory.length) return null;
+  let matched = 0, total = 0;
+  const lookback = Math.min(200, predictionHistory.length);
+  for (let i = predictionHistory.length - lookback; i < predictionHistory.length; i++) {
+    const r = predictionHistory[i];
+    if (!r) continue;
+    if (r.type === type && r.value === value) {
+      total++;
+      if (r.won) matched++;
+    }
+  }
+  if (total === 0) return null;
+  return matched / total;
+}
+
+function calculateConfidenceFromProb(type, predictedValue, modelProb) {
+  const histAcc = modelAccuracyFor(type, predictedValue);
+  let base = Math.round(modelProb * 100);
+  if (histAcc !== null) {
+    base = Math.round((base * 0.65) + (histAcc * 100 * 0.35));
+  }
+  base = Math.max(60, Math.min(98, base));
+  return base;
+}
+
+function generateSignalForPeriod(periodNum) {
+  const probs = computeModelProbabilities();
+  const typeRand = Math.random();
+  const type = typeRand < 0.5 ? "BS" : "RG";
+  let predValue, color, glowColor, boxClass, categoryText, modelProb;
+  if (type === "BS") {
+    const pBIG = probs.BS.BIG, pSMALL = probs.BS.SMALL;
+    if (pBIG >= pSMALL) { predValue = "BIG"; modelProb = pBIG; } else { predValue = "SMALL"; modelProb = pSMALL; }
+    color = "#00ff65"; glowColor = "#00ff65"; boxClass = "box-green"; categoryText = "BIG / SMALL";
+  } else {
+    const pRED = probs.RG.RED, pGREEN = probs.RG.GREEN;
+    if (pRED >= pGREEN) { predValue = "RED"; modelProb = pRED; } else { predValue = "GREEN"; modelProb = pGREEN; }
+    color = predValue === "RED" ? "#ff0055" : "#00ff65"; glowColor = color; boxClass = predValue === "RED" ? "box-red" : "box-green"; categoryText = "RED / GREEN";
+  }
+  const confidence = calculateConfidenceFromProb(type, predValue, modelProb);
+  activeSignal = { period: periodNum, type, value: predValue, confidence, timestamp: Date.now() };
+  predictionsMap[periodNum] = activeSignal;
+  const box = document.getElementById('predBox'); const valEl = document.getElementById('predVal'); const catEl = document.getElementById('predCategoryLabel');
+  box.className = `box ${boxClass}`; valEl.style.color = color; valEl.style.textShadow = `0 0 15px ${glowColor}`; valEl.innerText = predValue; catEl.innerText = categoryText;
+  document.getElementById('activePeriodText').innerText = periodNum; document.getElementById('activeSignalText').innerText = `${predValue} (${categoryText})`; document.getElementById('accuracyVal').innerText = confidence + '%';
+  totalSignals++;
+  const historyList = document.getElementById('historyList');
+  if (!document.getElementById(`period-${periodNum}`)) {
+    historyList.insertAdjacentHTML('afterbegin',
+      `<div class="row" id="period-${periodNum}">
+        <span class="period-id">${periodNum}</span>
+        <span class="pred-text">${predValue}</span>
+        <span class="result-text" id="result-${periodNum}">---</span>
+        <span class="badge-pending" id="badge-${periodNum}">PENDING</span>
+      </div>`
+    );
+  }
+  predictionHistory.push({ period: periodNum, type: activeSignal.type, value: activeSignal.value, won: null, timestamp: Date.now() });
+  if (predictionHistory.length > MAX_HISTORY) { predictionHistory = predictionHistory.slice(-MAX_HISTORY); }
+  updateStats();
+}
+
+function loadConfig() {
+  return db.ref('config').once('value').then(snap => {
+    const c = snap.val() || {};
+    if (c.appName) { document.getElementById('loginTitle').textContent = c.appName; document.getElementById('appTitle').textContent = c.appName; }
+    if (c.telegram) { document.getElementById('tgBtn').href = c.telegram; document.getElementById('tgHeader').href = c.telegram; }
+    if (c.lockImage) { const el = document.getElementById('lockImage'); if (el) el.src = c.lockImage; }
+    if (c.homeImage) { const el = document.getElementById('homeImage'); if (el) el.src = c.homeImage; }
+    if (c.homeVideo) { const hv = document.getElementById('homeVideo'); if (hv && hv.querySelector('source')) { hv.querySelector('source').src = c.homeVideo; hv.load(); } }
+    return c;
+  }).catch(err => { console.error('Config load error:', err); return {}; });
+}
+
+loadConfig();
+
+function setConnectionStatus(ok) {
+  connectionOK = ok; const dot = document.getElementById('statusDot'); const text = document.getElementById('statusText');
+  if (ok) { dot.className = 'status-indicator status-online'; text.textContent = 'CONNECTED TO SERVER'; text.style.color = '#00ff65'; }
+  else { dot.className = 'status-indicator status-offline'; text.textContent = 'CONNECTION LOST - RECONNECTING...'; text.style.color = '#ff0055'; }
+}
+
+function showError(msg) { const el = document.getElementById('errorNote'); el.textContent = '⚠️ ' + msg; el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 5000); }
+
+/* ===== Authentication (now uses callable Cloud Function) ===== */
+async function authenticate() {
+  const pwd = document.getElementById('passKey').value.trim().toUpperCase();
+  const errEl = document.getElementById('loginError');
+  if (!pwd) { errEl.textContent = '❌ Enter your VIP key!'; errEl.classList.remove('hidden'); return; }
+  errEl.classList.add('hidden');
+  const deviceId = generateDeviceId();
+  const functions = firebase.functions();
+  const validate = functions.httpsCallable('validateKey');
+  try {
+    const res = await validate({ key: pwd, deviceId });
+    if (res && res.data && res.data.success) {
+      currentUserKey = pwd;
+      userExpireDays = res.data.remainDays || null;
+      enterApp(userExpireDays);
+    } else {
+      errEl.textContent = '❌ AUTH FAILED'; errEl.classList.remove('hidden');
+    }
+  } catch (err) {
+    console.error('Auth error:', err);
+    const message = (err && err.message) ? err.message : 'CONNECTION ERROR - PLEASE TRY AGAIN';
+    errEl.textContent = '❌ ' + message; errEl.classList.remove('hidden');
+  }
+}
+
+function enterApp(remain) {
+  document.getElementById('loginSection').classList.add('hidden');
+  document.getElementById('dashSection').classList.remove('hidden');
+  const li = document.getElementById('lockImage'); if (li) li.style.display = 'none';
+  const hv = document.getElementById('homeVideo'); const hi = document.getElementById('homeImage');
+  if (hv && hv.querySelector('source') && hv.querySelector('source').src) { hv.style.display = 'block'; hv.muted = false; hv.volume = 0.5; hv.play().catch(()=>{}); hv.onended = function(){ hv.style.display = 'none'; if (hi && hi.src) hi.style.display = 'block'; }; }
+  else if (hi && hi.src) { hi.style.display = 'block'; }
+  if (remain !== null) {
+    const n = document.getElementById('expiryNote');
+    if (remain <= 3) { n.textContent = '⚠️ YOUR ACCESS EXPIRES IN ' + remain + ' DAYS'; n.classList.remove('hidden'); }
+    else { n.textContent = 'Valid until: ' + remain + ' days'; n.classList.remove('hidden'); }
+  }
+  checkNotices(); setConnectionStatus(true); startLiveEngine();
+}
+
+function checkNotices() {
+  db.ref('notices').once('value').then(snap => {
+    const notices = snap.val() || {}; const noticeList = Object.values(notices).sort((a,b)=> (b.timestamp||0)-(a.timestamp||0));
+    for (let notice of noticeList) { if (notice.key==='all' || notice.key===currentUserKey) { showNoticePopup(notice); break; } }
+  });
+}
+
+function showNoticePopup(notice) { const popup = document.getElementById('noticePopup'); const priorityIcon = {'info':'ℹ️','warning':'⚠️','urgent':'🔴','maintenance':'🔧'}[notice.priority] || 'ℹ️'; document.getElementById('noticePriorityIcon').textContent = priorityIcon; document.getElementById('noticeTitle').textContent = notice.title; document.getElementById('noticeMessage').textContent = notice.message; popup.classList.add('show'); }
+function closeNotice() { document.getElementById('noticePopup').classList.remove('show'); }
+
+function startLiveEngine() { updateTimer(); setInterval(updateTimer,1000); fetchApiData(); setInterval(fetchApiData,2500); setInterval(()=>{ if (currentPeriod5Digit && predictionsMap[currentPeriod5Digit]) updateStats(); },1000); }
+
+function updateTimer() { const now = new Date(); let seconds = (60 - now.getSeconds()) % 60; const secStr = pad2(seconds); document.getElementById('timerVal').textContent = `00:${secStr}`; const timerBox = document.getElementById('timerBox'); if (seconds <= 5) timerBox.classList.add('warning'); else timerBox.classList.remove('warning'); }
+
+async function fetchApiData() {
+  try {
+    const response = await fetch(`${API_URL}?ts=${Date.now()}`);
+    if (!response.ok) throw new Error('API returned ' + response.status);
+    const json = await response.json(); setConnectionStatus(true);
+    if (json && json.data && Array.isArray(json.data.list) && json.data.list.length>0) {
+      const latestIssue = String(json.data.list[0].issueNumber);
+      const nextIssue = BigInt(latestIssue) + 1n;
+      const nextPeriod5Digit = String(nextIssue).slice(-5);
+      if (nextPeriod5Digit !== currentPeriod5Digit) { currentPeriod5Digit = nextPeriod5Digit; generateSignalForPeriod(currentPeriod5Digit); }
+      json.data.list.forEach(item => {
+        const fullIssue = String(item.issueNumber); const issue5Digit = fullIssue.slice(-5); const num = parseInt(item.number,10);
+        if (num >= 0 && !resultCache.has(issue5Digit)) {
+          resultCache.add(issue5Digit);
+          recentResults.push(num); if (recentResults.length > RECENT_WINDOW) recentResults.shift(); saveRecentResults();
+          const actualBS = num >= 5 ? "BIG" : "SMALL"; const actualColor = num % 2 === 0 ? "RED" : "GREEN"; resolveResult(issue5Digit, actualBS, actualColor, num);
+        }
+      });
+    }
+  } catch (err) { console.error('API Fetch Error:', err); setConnectionStatus(false); }
+}
+
+function resolveResult(periodNum, actualBS, actualColor, winningNum) {
+  const badgeElem = document.getElementById(`badge-${periodNum}`);
+  const resultElem = document.getElementById(`result-${periodNum}`);
+  const pred = predictionsMap[periodNum];
+  let matched = false; let resultLabel = "";
+  if (pred) {
+    if (pred.type === "BS") { matched = pred.value === actualBS; resultLabel = `${actualBS} (${winningNum})`; }
+    else { matched = pred.value === actualColor; resultLabel = `${actualColor} (${winningNum})`; }
+    if (matched) { if (badgeElem) { badgeElem.className='badge-win'; badgeElem.innerText='WIN ✓'; } if (resultElem) resultElem.innerHTML = `<span style="color:#00ff65">${resultLabel}</span>`; winCount++; }
+    else { if (badgeElem) { badgeElem.className='badge-loss'; badgeElem.innerText='LOSS ✗'; } if (resultElem) resultElem.innerHTML = `<span style="color:#ff0055">${resultLabel}</span>`; lossCount++; }
+  } else {
+    resultLabel = `${actualColor}/${actualBS} (${winningNum})`;
+    const historyList = document.getElementById('historyList');
+    if (!document.getElementById(`period-${periodNum}`)) {
+      historyList.insertAdjacentHTML('afterbegin',
+        `<div class="row" id="period-${periodNum}">
+          <span class="period-id">${periodNum}</span>
+          <span class="pred-text">—</span>
+          <span class="result-text" id="result-${periodNum}"><span style="color:#00e5ff">${resultLabel}</span></span>
+        </div>`
+      );
+    } else if (resultElem) { resultElem.innerHTML = `<span style="color:#00e5ff">${resultLabel}</span>`; }
+  }
+  for (let i = predictionHistory.length - 1; i >= 0; i--) { if (predictionHistory[i].period === periodNum && predictionHistory[i].won === null) { predictionHistory[i].won = !!matched; break; } }
+  if (predictionHistory.length > MAX_HISTORY) predictionHistory = predictionHistory.slice(-MAX_HISTORY);
+  updateStats();
+}
+
+function updateStats() { const total = totalSignals; const winRate = total>0 ? Math.round((winCount/total)*100) : 0; document.getElementById('winRateStat').innerText = winRate+'%'; document.getElementById('totalSignalsStat').innerText = total; document.getElementById('winsStat').innerText = winCount; document.getElementById('lossesStat').innerText = lossCount; if (total>0) { const pending = Math.max(0, total - winCount - lossCount); document.getElementById('predStats').innerHTML = `<strong>${winRate}%</strong> WIN RATE | <strong>${pending}</strong> PENDING | <strong style="color:#00ff65">${winCount}W</strong> <strong style="color:#ff0055">${lossCount}L</strong>`; } }
+
+window.addEventListener('error', (e) => { console.error('Global error:', e.error); });
+</script>
+</body>
+</html>
